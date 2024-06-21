@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+    php:
+      build:
+        context: .
+        dockerfile: docker/php/Dockerfile
+        args:
+        - ARCH=arm64
+      volumes:
+        - .:/mfo
+      ports:
+        - "8000:8000"
+      depends_on:
+        - postgres_db
+
+    postgres_db:
+      image: postgres:16
+      ports:
+        - "5432:5432"
+      volumes:
+        - ./docker/psql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+
